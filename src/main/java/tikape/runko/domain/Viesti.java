@@ -1,16 +1,16 @@
 package tikape.runko.domain;
 
-import java.sql.Date;
 
+import java.time.*;
 public class Viesti {
 
     private int id;
     private String viesti;
     private String nimimerkki;
-    private Date date;
+    private LocalDateTime date;
     private int keskustelu;
 
-    public Viesti(int id, String viesti, String nimimerkki, Date date, int keskustelu) {
+    public Viesti(int id, String viesti, String nimimerkki, LocalDateTime date, int keskustelu) {
         this.id = id;
         this.viesti = viesti;
         this.nimimerkki = nimimerkki;
@@ -50,12 +50,15 @@ public class Viesti {
         this.nimimerkki = nimimerkki;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void aikaViestille(){
+        this.date = LocalDateTime.now();
+    }
 }

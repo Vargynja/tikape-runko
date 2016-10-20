@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import tikape.runko.domain.Viesti;
@@ -32,7 +34,7 @@ public class ViestiDao {
         Integer id = rs.getInt("id");
         String viesti = rs.getString("viesti");
         String nimimerkki = rs.getString("nimimerkki");
-        Date date = rs.getDate("päivämäärä");
+        LocalDateTime date = rs.getTimestamp("päivämäärä").toLocalDateTime();
         Integer keskustelu = rs.getInt("keskustelu");
         Viesti v = new Viesti(id, viesti, nimimerkki, date, keskustelu);
 
@@ -54,7 +56,7 @@ public class ViestiDao {
             Integer id = rs.getInt("id");
             String viesti = rs.getString("viesti");
             String nimimerkki = rs.getString("nimimerkki");
-            Date date = rs.getDate("päivämäärä");
+            LocalDateTime date = rs.getTimestamp("päivämäärä").toLocalDateTime();
             Integer keskustelu = rs.getInt("keskustelu");
             viestit.add(new Viesti(id, viesti, nimimerkki, date, keskustelu));
         }

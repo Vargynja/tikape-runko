@@ -1,11 +1,11 @@
 package tikape.runko;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.*;
 
 public class SQLQueries {
 
@@ -35,8 +35,8 @@ public class SQLQueries {
         return maara;
     }
 
-    public Date uusinViesti(String mika) throws SQLException { // mika = Keskustelu.id tai Alue.id
-        Date date = null;
+    public LocalDateTime uusinViesti(String mika) throws SQLException { // mika = Keskustelu.id tai Alue.id
+        LocalDateTime date = null;
         Connection connection = DriverManager.getConnection(dbadress);
         PreparedStatement stmt = connection.prepareStatement("SELECT paivamaara FROM Alue "
                 + "INNER JOIN Keskustelu ON keskustelu.alue = alue.id "
@@ -48,7 +48,7 @@ public class SQLQueries {
         stmt.setString(1, mika);
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
-            date = rs.getDate("paivamaara");
+            date = rs.getTimestamp("paivamaara").toLocalDateTime();
         }
 
         rs.close();
