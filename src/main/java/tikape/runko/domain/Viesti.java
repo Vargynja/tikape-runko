@@ -7,10 +7,10 @@ public class Viesti {
     private int id;
     private String viesti;
     private String nimimerkki;
-    private LocalDateTime date;
+    private String date;
     private int keskustelu;
 
-    public Viesti(int id, String viesti, String nimimerkki, LocalDateTime date, int keskustelu) {
+    public Viesti(int id, String viesti, String nimimerkki, String date, int keskustelu) {
         this.id = id;
         this.viesti = viesti;
         this.nimimerkki = nimimerkki;
@@ -50,15 +50,13 @@ public class Viesti {
         this.nimimerkki = nimimerkki;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void aikaViestille(){
-        this.date = LocalDateTime.now();
-    }
+    
 }

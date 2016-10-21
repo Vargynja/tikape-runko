@@ -7,14 +7,14 @@ public class Alue {
     private int id;
     private String nimi;
     private int viesteja;
-    private LocalDateTime time;
+    private String time;
     
     public Alue(int id, String nimi) {
         this.id = id;
         this.nimi = nimi;
     }
 
-    public Alue(int id, String nimi, int viesteja, LocalDateTime time) {
+    public Alue(int id, String nimi, int viesteja, String time) {
         this.id = id;
         this.nimi = nimi;
         this.viesteja = viesteja;
@@ -36,4 +36,22 @@ public class Alue {
     public void setNimi(String nimi) {
         this.nimi = nimi;
     }
+
+    public int getViesteja() {
+        return viesteja;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setViesteja(int viesteja) {
+        this.viesteja = viesteja;
+    }
+      
+    
 }

@@ -5,10 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import tikape.runko.domain.Alue;
-import java.time.*;
+import tikape.runko.SQLQueries;
 
 public class AlueDao {
 
@@ -44,18 +45,16 @@ public class AlueDao {
     public List<Alue> findAll() throws SQLException {
 
         Connection connection = DriverManager.getConnection(dbaddress);
-        PreparedStatement stmt = connection.prepareStatement("SELECT Alue.id, Alue.nimi, COUNT(Viestit.id) AS viestimaara, MAX(Viestit.paivamara) FROM Alue "
-                + "INNER JOIN Keskustelu ON keskustelu.alue = alue.id "
-                + "INNER JOIN Viestit ON viestit.keskustelu = keskustelu.id "
-                + "GROUP BY Alue.id");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Alue");
 
+        SQLQueries sqlq = new SQLQueries(dbaddress);
         ResultSet rs = stmt.executeQuery();
         List<Alue> alueet = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");
             String nimi = rs.getString("nimi");
-            Integer maara = rs.getInt("viestimaara");
-            LocalDateTime tiem = rs.getTimestamp("paivamaara").toLocalDateTime();
+            int maara = sqlq.viestienMaara("alue.id", id);
+            String tiem = sqlq.uusinViesti("alue.id", id);
             alueet.add(new Alue(id, nimi, maara, tiem));
         }
 
@@ -64,6 +63,13 @@ public class AlueDao {
         connection.close();
 
         return alueet;
+    }
+    
+    public void lisaaAlue(String nimi) throws SQLException{
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("INSERT INTO Alue(nimi) VALUES('" + nimi + "')");
+        connection.close();
     }
 
     public void delete(Integer key) throws SQLException {
