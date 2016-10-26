@@ -8,8 +8,9 @@
         
         <ol>
             <li th:each="viesti : ${viestit}">
-                <span th:text="${viesti.viesti}">Viesti</span><span th:text="${viesti.nimimerkki}">Nimimerkki</span>
-                <span th:text="${viesti.date}">Päivämäärä</span>
+                <span th:text="${viesti.viesti}">Viesti</span><span th:text="' ' + ${viesti.nimimerkki}">Nimimerkki</span>
+                <span th:text="' ' + ${viesti.date} + ' '">Päivämäärä</span>
+                <a th:href="${'/alue/' + keskustelu.alue + '/keskustelu/' + keskustelu.id + '/viesti/poista/' + viesti.id}"><span th:text="Poista">Poista</span></a>
             </li>
         </ol>
         

@@ -45,7 +45,7 @@ public class AlueDao {
     public List<Alue> findAll() throws SQLException {
 
         Connection connection = DriverManager.getConnection(dbaddress);
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Alue");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Alue ORDER BY nimi ASC");
 
         SQLQueries sqlq = new SQLQueries(dbaddress);
         ResultSet rs = stmt.executeQuery();
@@ -73,6 +73,9 @@ public class AlueDao {
     }
 
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Alue WHERE id =" + key);        
+        connection.close();
     }
 }

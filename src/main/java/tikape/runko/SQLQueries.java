@@ -20,12 +20,27 @@ public class SQLQueries {
         PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(Viestit.id) AS viestimaara FROM Alue "
                 + "INNER JOIN Keskustelu ON keskustelu.alue = alue.id "
                 + "INNER JOIN Viestit ON viestit.keskustelu = keskustelu.id "
-                + "WHERE ? = ?"
-                + "GROUP BY ? ");
+                + "WHERE " + mika + " = " + key + " "
+                + "GROUP BY " + mika);
 
-        stmt.setString(1, mika);
-        stmt.setString(3, mika);
-        stmt.setInt(2, key);
+
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            maara = rs.getInt("viestimaara");
+
+        }
+        rs.close();
+        stmt.close();
+        connection.close();
+        return maara;
+    }
+     public int viestienMaaraKesk(int key) throws SQLException { // mika = Keskustelu.id tai Alue.id
+        int maara = 0;
+        Connection connection = DriverManager.getConnection(dbadress);
+        PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(Viestit.id) AS viestimaara FROM Viestit "
+                + "WHERE keskustelu = " + key + " ");
+
+
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             maara = rs.getInt("viestimaara");
@@ -40,17 +55,33 @@ public class SQLQueries {
     public String uusinViesti(String mika, int key) throws SQLException { // mika = Keskustelu.id tai Alue.id
         String date = null;
         Connection connection = DriverManager.getConnection(dbadress);
-        PreparedStatement stmt = connection.prepareStatement("SELECT paivamaara FROM Alue "
-                + "INNER JOIN Keskustelu ON keskustelu.alue = alue.id "
-                + "INNER JOIN Viestit ON viestit.keskustelu = keskustelu.id "
-                + "WHERE ? = ? "
-                + "GROUP BY ? "
+        PreparedStatement stmt = connection.prepareStatement("SELECT paivamaara FROM Viestit "
+                + "INNER JOIN Keskustelu ON viestit.keskustelu = keskustelu.id "
+                + "INNER JOIN Alue ON keskustelu.alue = alue.id "                
+                + "WHERE " + mika + " = " + key + " "
+                + "GROUP BY " + mika + " "
                 + "ORDER BY paivamaara DESC "
                 + "LIMIT 1 ");
 
-        stmt.setString(1, mika);
-        stmt.setString(3, mika);
-        stmt.setInt(2, key);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            date = rs.getString("paivamaara");
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+        return date;
+    }
+    
+    public String uusinViestiKesk(int key) throws SQLException { // mika = Keskustelu.id tai Alue.id
+        String date = null;
+        Connection connection = DriverManager.getConnection(dbadress);
+        PreparedStatement stmt = connection.prepareStatement("SELECT paivamaara FROM Viestit "           
+                + "WHERE keskustelu = " + key + " "
+                + "ORDER BY paivamaara DESC "
+                + "LIMIT 1 ");
+
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             date = rs.getString("paivamaara");

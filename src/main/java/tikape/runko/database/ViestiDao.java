@@ -67,7 +67,25 @@ public class ViestiDao {
     }
 
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Viestit WHERE id =" + key);
+        connection.close();
+    }
+    
+    public void deleteKeskustelu(Integer key) throws SQLException {
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Viestit WHERE keskustelu =" + key);
+        connection.close();
+    }
+    
+    public void deleteAlue(Integer key) throws SQLException {
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Viestit WHERE keskustelu IN (SELECT keskustelu.id FROM Keskustelu "
+                + "WHERE keskustelu.alue = " + key + ")");
+        connection.close();
     }
 
     public List<Viesti> findAllInKeskustelu(int key) throws SQLException {

@@ -35,8 +35,8 @@ public class Main {
             map.put("alue", a);
             return new ModelAndView(map, "alue");
         }, new ThymeleafTemplateEngine());
-        
-        get("/keskustelu/:id", (req, res) -> {
+
+        get("alue/:it/keskustelu/:id", (req, res) -> {
             HashMap map = new HashMap<>();
             List<Viesti> viestit = viestiDao.findAllInKeskustelu(Integer.parseInt(req.params("id")));
             map.put("viestit", viestit);
@@ -44,14 +44,14 @@ public class Main {
             map.put("keskustelu", k);
             return new ModelAndView(map, "keskustelu");
         }, new ThymeleafTemplateEngine());
-        
+
         post("/", (req, res) -> {
             String nimi = req.queryParams("nimi");
             alueDao.lisaaAlue(nimi);
             res.redirect("/");
             return "";
         });
-        
+
         post("/alue/:id", (req, res) -> {
             String nimi = req.queryParams("nimi");
             int key = Integer.parseInt(req.params("id"));
@@ -59,14 +59,29 @@ public class Main {
             res.redirect("/alue/" + req.params(":id"));
             return "";
         });
-        
-        post("/keskustelu/:id", (req, res) -> {
+
+        post("/alue/:it/keskustelu/:id", (req, res) -> {
             String viesti = req.queryParams("viesti");
             String nimi = req.queryParams("nimimerkki");
             int key = Integer.parseInt(req.params("id"));
             viestiDao.lisaaViesti(viesti, nimi, key);
-            res.redirect("/keskustelu/" + req.params(":id"));
+            res.redirect("/alue/" + req.params("it") + "/keskustelu/" + req.params(":id"));
             return "LoL";
+        });
+
+        get("/alue/poista/:id", (req, res) -> {
+            viestiDao.deleteAlue(Integer.parseInt(req.params("id")));
+            keskusteluDao.deleteAlue(Integer.parseInt(req.params("id")));
+            alueDao.delete(Integer.parseInt(req.params("id")));
+            res.redirect("/");
+            return "";
+        });
+
+        get("/alue/:it/keskustelu/:il/viesti/poista/:id", (req, res) -> {
+            viestiDao.delete(Integer.parseInt(req.params("id")));
+            res.redirect("/alue/" + Integer.parseInt(req.params(":it"))
+                    + "/keskustelu/" + Integer.parseInt(req.params(":il")));
+            return "";
         });
     }
 }

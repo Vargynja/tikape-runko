@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import tikape.runko.SQLQueries;
 import tikape.runko.domain.Keskustelu;
 
 public class KeskusteluDao {
@@ -46,14 +47,16 @@ public class KeskusteluDao {
 
         Connection connection = DriverManager.getConnection(dbaddress);
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
-
+        SQLQueries sqlq = new SQLQueries(dbaddress);
         ResultSet rs = stmt.executeQuery();
         List<Keskustelu> keskustelut = new ArrayList<>();
         while (rs.next()) {
             Integer id = rs.getInt("id");
             String nimi = rs.getString("nimi");
             Integer alue = rs.getInt("alue");
-            keskustelut.add(new Keskustelu(id, nimi, alue));
+            int maara = sqlq.viestienMaaraKesk(id);
+            String time = sqlq.uusinViestiKesk(id);
+            keskustelut.add(new Keskustelu(id, nimi, alue, maara, time));
         }
 
         rs.close();
@@ -64,14 +67,24 @@ public class KeskusteluDao {
     }
 
     public void delete(Integer key) throws SQLException {
-        // ei toteutettu
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Keskustelu WHERE id =" + key);
+        connection.close();
+    }
+
+    public void deleteAlue(Integer key) throws SQLException {
+        Connection connection = DriverManager.getConnection(dbaddress);
+        Statement stmt = connection.createStatement();
+        stmt.execute("DELETE FROM Keskustelu WHERE alue =" + key);
+        connection.close();
     }
 
     public List<Keskustelu> findAllInAlue(int key) throws SQLException {
 
         Connection connection = DriverManager.getConnection(dbaddress);
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu WHERE alue = ?");
-
+        SQLQueries sqlq = new SQLQueries(dbaddress);
         stmt.setInt(1, key);
         ResultSet rs = stmt.executeQuery();
         List<Keskustelu> keskustelut = new ArrayList<>();
@@ -79,7 +92,9 @@ public class KeskusteluDao {
             Integer id = rs.getInt("id");
             String nimi = rs.getString("nimi");
             Integer alue = rs.getInt("alue");
-            keskustelut.add(new Keskustelu(id, nimi, alue));
+            int maara = sqlq.viestienMaaraKesk(id);
+            String time = sqlq.uusinViestiKesk(id);
+            keskustelut.add(new Keskustelu(id, nimi, alue, maara, time));
         }
 
         rs.close();

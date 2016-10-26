@@ -3,6 +3,7 @@
 
     <head>
         <title>Foorumi</title>
+        <meta charset="UTF-8"></meta>
     </head>
 
     <body>
@@ -12,8 +13,9 @@
         
         <ul>
             <li th:each="alu : ${alue}">                
-                <a th:href="${'/alue/' + alu.id}"><span th:text="${alu.nimi}">Alue</span></a><span th:text="${alu.viesteja}">Viestien määrä</span>
-                <span th:text="${alu.time}">Viimeisin viesti</span>
+                <a th:href="${'/alue/' + alu.id}"><span th:text="${alu.nimi}">Alue</span></a><span th:text="'   ' + ${alu.viesteja}">Viestien määrä</span>
+                <span th:text="'   ' + ${alu.time} +' '">Viimeisin viesti</span>
+                <a th:href="${'/alue/poista/' + alu.id}"><span th:text="Poista">Poista</span></a>
             </li>
         </ul>
         
