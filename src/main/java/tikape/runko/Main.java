@@ -15,6 +15,7 @@ import tikape.runko.domain.Viesti;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        port(getHerokuAssignedPort());
         String db = "jdbc:sqlite:foorumi.db";
         AlueDao alueDao = new AlueDao(db);
         KeskusteluDao keskusteluDao = new KeskusteluDao(db);
@@ -63,7 +64,7 @@ public class Main {
         post("/alue/:it/keskustelu/:id", (req, res) -> {
             String viesti = req.queryParams("viesti");
             String nimi = req.queryParams("nimimerkki");
-            if(nimi.isEmpty()){
+            if (nimi.isEmpty()) {
                 nimi = "Anonymous";
             }
             int key = Integer.parseInt(req.params("id"));
@@ -86,5 +87,13 @@ public class Main {
                     + "/keskustelu/" + Integer.parseInt(req.params(":il")));
             return "";
         });
+    }
+
+    static int getHerokuAssignedPort() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get("PORT") != null) {
+            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        }
+        return 4567;
     }
 }
