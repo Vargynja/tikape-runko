@@ -63,6 +63,9 @@ public class Main {
         post("/alue/:it/keskustelu/:id", (req, res) -> {
             String viesti = req.queryParams("viesti");
             String nimi = req.queryParams("nimimerkki");
+            if(nimi.isEmpty()){
+                nimi = "Anonymous";
+            }
             int key = Integer.parseInt(req.params("id"));
             viestiDao.lisaaViesti(viesti, nimi, key);
             res.redirect("/alue/" + req.params("it") + "/keskustelu/" + req.params(":id"));
